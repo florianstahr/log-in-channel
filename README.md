@@ -1,6 +1,10 @@
 # log-in-channel
 
+[![npm](https://img.shields.io/npm/v/log-in-channel.svg)](https://npmjs.com/package/log-in-channel) [![GitHub](https://img.shields.io/github/license/florianstahr/log-in-channel.svg?colorB=brightgreen)](https://github.com/florianstahr/log-in-channel)
+
 No messy console.log's anymore! Log things in specific channels you can mute, unmute and give specific colors.
+
+![https://i.imgur.com/VKxwRQO.png](https://i.imgur.com/VKxwRQO.png)
 
 ## Install
 
@@ -89,4 +93,6 @@ CustomLogger.helper.channel.muteAll(); // mute all channels
 CustomLogger.helper.channel.unmuteAll(); // unmute all channels
 ```
 
+## License
 
+This repo is licensed under the [MIT License](https://github.com/florianstahr/log-in-channel/blob/master/LICENSE).
