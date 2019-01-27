@@ -98,8 +98,8 @@ const BaseConfig: LoggerBaseConfig = {
   },
 };
 
-const isNode = new Function("try {return this===global;}catch(e){return false;}");
-const isBrowser = new Function("try {return this===window;}catch(e){ return false;}");
+const isNode = new Function('try {return this===global;}catch(e){return false;}');
+const isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
 
 BaseConfig.environment.isNode = isNode();
 BaseConfig.environment.isBrowser = isBrowser();
@@ -170,7 +170,7 @@ const generatePathPieceChalk = (piece: string, style: PathPieceStyle) => {
     backgroundColor: style.backgroundColor || defaultPathPieceStyle.backgroundColor,
     fontWeight: '400',
   };
-  
+
   return chalk.hex(pathStyle.color).bgHex(pathStyle.backgroundColor)(piece).toString();
 };
 
@@ -220,7 +220,7 @@ const logInChannel = (
         }
       });
     }
-  } else if(BaseConfig.environment.isBrowser || BaseConfig.environment.isNode) {
+  } else if (BaseConfig.environment.isBrowser || BaseConfig.environment.isNode) {
     path = generatePathPieceChalk(`[${channelId}]`, opts.style);
     each(pathPieces, (piece: PathPiece | string) => {
       if (typeof piece === 'object') {
@@ -347,9 +347,9 @@ const loggerInit = (config: LoggerConfig) => (options: LoggerInitOptions) => {
 };
 
 class Logger {
-  public channels: Channels = {};
+  public channels: any = {};
 
-  private config = {
+  private config: LoggerConfig = {
     mutedChannels: [],
     everythingMuted: false,
     channels: {},

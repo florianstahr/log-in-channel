@@ -3,6 +3,8 @@ env:
   node: true
   mocha: true
   es6: true
+globals:
+  window: true
 parser: typescript-eslint-parser
 parserOptions:
   sourceType: module
@@ -11,3 +13,4 @@ parserOptions:
 rules:
   no-console: off
   no-param-reassign: off
+  no-new-func: off
