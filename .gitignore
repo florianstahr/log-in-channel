@@ -1,0 +1,15 @@
+# idea
+.idea/
+
+# vscode
+.vscode/
+
+# node
+node_modules/
+
+# dist
+dist/
+
+# yalc
+.yalc/
+yalc.lock

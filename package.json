@@ -1,0 +1,33 @@
+{
+  "name": "log-in-channel",
+  "version": "0.1.0",
+  "description": "a small utiliy for logging in js applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Florian Stahr <mail@florianstahr.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint": "./node_modules/.bin/eslint src --ext ts"
+  },
+  "keywords": [
+    "log",
+    "console.log",
+    "logger",
+    "channel"
+  ],
+  "devDependencies": {
+    "@types/chrome": "^0.0.78",
+    "@types/lodash": "^4.14.120",
+    "@types/node": "^10.12.18",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.15.0",
+    "typescript": "^3.2.4",
+    "typescript-eslint-parser": "^22.0.0"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "lodash": "^4.17.11"
+  }
+}
