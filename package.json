@@ -1,6 +1,6 @@
 {
   "name": "log-in-channel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "a small utiliy for logging in js applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
