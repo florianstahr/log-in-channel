@@ -30,6 +30,11 @@ const CustomLogger = new Logger();
 /*
 
 {
+  colorSupportType?: null | 'terminal' | 'chrome', // Define here in which environment you are
+  // null --> no colored logs
+  // 'terminal' --> colored logs where chalk (npm package) works
+  // 'chrome' --> colored logs where css styled logs work
+
   channel: {
     '<id of channel>': {
       // channel config params
@@ -47,6 +52,7 @@ const CustomLogger = new Logger();
 */
 
 CustomLogger.init({
+  colorSupportType: 'terminal',
   channels: {
     'default': {},
     'auth/state': {
@@ -92,6 +98,12 @@ CustomLogger.helper.channel.muteAll(); // mute all channels
 
 CustomLogger.helper.channel.unmuteAll(); // unmute all channels
 ```
+
+## Example
+
+You can find an example in the [`example`](https://github.com/florianstahr/log-in-channel/tree/master/example) directory.
+
+Run with `node example/example.js` or `yarn run:example` or `npm run run:example`!
 
 ## License
 
