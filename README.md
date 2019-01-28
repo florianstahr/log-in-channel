@@ -99,6 +99,12 @@ CustomLogger.helper.channel.muteAll(); // mute all channels
 CustomLogger.helper.channel.unmuteAll(); // unmute all channels
 ```
 
+## Example
+
+You can find an example in the [`example`](https://github.com/florianstahr/log-in-channel/tree/master/example) directory.
+
+Run with `node example/example.js` or `yarn run:example` or `npm run run:example`!
+
 ## License
 
 This repo is licensed under the [MIT License](https://github.com/florianstahr/log-in-channel/blob/master/LICENSE).
