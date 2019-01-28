@@ -30,6 +30,11 @@ const CustomLogger = new Logger();
 /*
 
 {
+  colorSupportType?: null | 'terminal' | 'chrome', // Define here in which environment you are
+  // null --> no colored logs
+  // 'terminal' --> colored logs where chalk (npm package) works
+  // 'chrome' --> colored logs where css styled logs work
+
   channel: {
     '<id of channel>': {
       // channel config params
@@ -47,6 +52,7 @@ const CustomLogger = new Logger();
 */
 
 CustomLogger.init({
+  colorSupportType: 'terminal',
   channels: {
     'default': {},
     'auth/state': {

@@ -3,6 +3,7 @@ const Logger = require('../dist/logger').default;
 const CustomLogger = new Logger();
 
 CustomLogger.init({
+  colorSupportType: 'terminal',
   channels: {
     'auth/state': {
       options: {

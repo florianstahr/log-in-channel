@@ -54,73 +54,7 @@ export interface LoggerConfig {
   mutedChannels: Array<string>
   everythingMuted: Boolean
   channels: Channels
-}
-
-export interface LoggerBaseConfigSupported {
-  console: Boolean
-  modifiedConsole: Boolean
-  consoleStyles: Boolean
-  consoleGroups: Boolean
-}
-
-export interface LoggerBaseConfigBrowser {
-  isFirefox: Boolean
-  supported: LoggerBaseConfigSupported
-}
-
-export interface LoggerBaseConfigEnvironment {
-  isBrowser: Boolean
-  isNode: Boolean
-  browser: LoggerBaseConfigBrowser
-}
-
-export interface LoggerBaseConfig {
-  environment: LoggerBaseConfigEnvironment
-}
-
-export interface Window {
-  chrome: string
-}
-
-const BaseConfig: LoggerBaseConfig = {
-  environment: {
-    isBrowser: false,
-    isNode: false,
-    browser: {
-      isFirefox: false,
-      supported: {
-        console: false,
-        modifiedConsole: false,
-        consoleStyles: false,
-        consoleGroups: false,
-      },
-    },
-  },
-};
-
-const isNode = new Function('try {return this===global;}catch(e){return false;}');
-const isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
-
-BaseConfig.environment.isNode = isNode();
-BaseConfig.environment.isBrowser = isBrowser();
-
-if (BaseConfig.environment.isBrowser) {
-  BaseConfig.environment.browser.isFirefox = window.navigator
-    && /firefox/i.test(window.navigator.userAgent);
-
-  BaseConfig.environment.browser.supported
-    .console = !!window && !!window.console;
-
-  BaseConfig.environment.browser.supported
-    .modifiedConsole = BaseConfig.environment.browser.supported.console
-    && console.log.toString().indexOf('apply') !== -1;
-
-  BaseConfig.environment.browser.supported
-    .consoleStyles = !!window.chrome || !!(BaseConfig.environment.browser.isFirefox
-      && BaseConfig.environment.browser.supported.modifiedConsole);
-
-  BaseConfig.environment.browser.supported
-    .consoleGroups = !!(window.console && console.group);
+  colorSupportType: null | 'terminal' | 'chrome'
 }
 
 const muteChannel = (config: LoggerConfig) => (channelId: string) => {
@@ -201,7 +135,7 @@ const logInChannel = (
   let path: string = '';
   const pathStyles: any = [];
 
-  if (BaseConfig.environment.isBrowser && BaseConfig.environment.browser.supported.consoleStyles) {
+  if (config.colorSupportType === 'chrome') {
     path = `%c[${channelId}]`;
     pathStyles.push(generatePathStyle({
       color: opts.style.color,
@@ -220,7 +154,7 @@ const logInChannel = (
         }
       });
     }
-  } else if (BaseConfig.environment.isBrowser || BaseConfig.environment.isNode) {
+  } else if (config.colorSupportType === 'terminal') {
     path = generatePathPieceChalk(`[${channelId}]`, opts.style);
     each(pathPieces, (piece: PathPiece | string) => {
       if (typeof piece === 'object') {
@@ -337,6 +271,7 @@ const setChannel = (config: LoggerConfig) => (channelId: string) => ({
 
 export interface LoggerInitOptions {
   channels: Channels
+  colorSupportType: null | 'terminal' | 'chrome'
 }
 
 const loggerInit = (config: LoggerConfig) => (options: LoggerInitOptions) => {
@@ -344,6 +279,10 @@ const loggerInit = (config: LoggerConfig) => (options: LoggerInitOptions) => {
     ...config.channels,
     ...options.channels,
   };
+
+  if (options.colorSupportType) {
+    config.colorSupportType = options.colorSupportType;
+  }
 };
 
 class Logger {
@@ -353,6 +292,7 @@ class Logger {
     mutedChannels: [],
     everythingMuted: false,
     channels: {},
+    colorSupportType: null,
   };
 
   public channel = setChannel(this.config);

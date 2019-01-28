@@ -18,7 +18,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "./node_modules/.bin/eslint src --ext ts"
+    "lint": "./node_modules/.bin/eslint src --ext ts",
+    "run:example": "node example/example.js"
   },
   "keywords": [
     "log",
