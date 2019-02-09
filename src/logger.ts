@@ -7,19 +7,19 @@ import chalk from 'chalk';
 
 export interface PathPieceStyle {
   color?: string
-  backgroundColor?: string
+  backgroundColor?: string | null
   fontWeight?: string
 }
 
 export interface PathPieceStyleCSS {
   color?: string
-  'background-color'?: string
+  'background-color'?: string | null
   'font-weight'?: string
 }
 
 export interface PathPieceStyleChalk {
   color: string
-  backgroundColor: string
+  backgroundColor: string | null
   fontWeight: string,
 }
 
@@ -30,7 +30,7 @@ export interface PathPiece {
 
 export interface ChannelOptionsStyle {
   color?: string
-  backgroundColor?: string
+  backgroundColor?: string | null
   fontWeight?: string
 }
 
@@ -79,14 +79,14 @@ const unmuteAllChannels = (config: LoggerConfig) => () => {
 const defaultPathPieceStyle: PathPieceStyleChalk = {
   color: '#717171',
   fontWeight: '400',
-  backgroundColor: 'transparent',
+  backgroundColor: null, // 'transparent',
 };
 
 const generatePathStyle = (style: PathPieceStyleCSS | null = null) => {
   let pathStyle: PathPieceStyleCSS = {
     color: defaultPathPieceStyle.color,
     'font-weight': '400',
-    'background-color': 'transparent',
+    'background-color': null,
   };
 
   if (isPlainObject(style)) {
@@ -102,10 +102,20 @@ const generatePathPieceChalk = (piece: string, style: PathPieceStyle) => {
   const pathStyle: PathPieceStyleChalk = {
     color: style.color || defaultPathPieceStyle.color,
     backgroundColor: style.backgroundColor || defaultPathPieceStyle.backgroundColor,
-    fontWeight: '400',
+    fontWeight: style.fontWeight || defaultPathPieceStyle.fontWeight,
   };
 
-  return chalk.hex(pathStyle.color).bgHex(pathStyle.backgroundColor)(piece).toString();
+  let generated = chalk.hex(pathStyle.color);
+
+  if (pathStyle.backgroundColor) {
+    generated = generated.bgHex(pathStyle.backgroundColor);
+  }
+
+  if (pathStyle.fontWeight === '700') {
+    return generated.bold(piece).toString();
+  }
+
+  return generated(piece).toString();
 };
 
 const logInChannel = (
@@ -122,7 +132,8 @@ const logInChannel = (
   const opts: ChannelOptionsDefault = {
     style: {
       color: '#7a7a7a',
-      backgroundColor: 'transparent',
+      backgroundColor: null,
+      fontWeight: '400',
     },
   };
 
@@ -197,7 +208,7 @@ const logSpecial = (
         label: 'ERROR',
         style: {
           color: '#ff2400',
-          'font-weight': '700',
+          fontWeight: '700',
         },
       });
       break;
@@ -206,7 +217,7 @@ const logSpecial = (
         label: 'INFO',
         style: {
           color: '#ff8c00',
-          'font-weight': '700',
+          fontWeight: '700',
         },
       });
       break;
@@ -214,9 +225,9 @@ const logSpecial = (
       path.push({
         label: 'INFO',
         style: {
-          color: '#fffa00',
+          color: '#ffdf00',
           'background-color': '#000',
-          'font-weight': '700',
+          fontWeight: '700',
         },
       });
       break;
@@ -226,7 +237,7 @@ const logSpecial = (
         style: {
           color: '#3ce200',
           'background-color': '#000',
-          'font-weight': '700',
+          fontWeight: '700',
         },
       });
       break;
