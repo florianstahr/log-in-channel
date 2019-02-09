@@ -42,7 +42,7 @@ const CustomLogger = new Logger();
         style?: {
           color?: '<hexa color code>', // string
           backgroundColor?: '<hexa color code>', // string
-          fontWeight?: '<100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900>', // string
+          fontWeight?: '<400 | 700>', // string
         },
       },
     },
@@ -62,7 +62,7 @@ CustomLogger.init({
         },
       },
     },
-    
+
     ...
 
   },
