@@ -4,6 +4,9 @@
 # vscode
 .vscode/
 
+# log files
+*.log
+
 # node
 node_modules/
 
