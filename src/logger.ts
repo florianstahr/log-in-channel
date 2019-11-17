@@ -85,7 +85,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     this._config.colorSupportType = args.colorSupportType;
   }
 
-  public channel: InternalTypeRef.SetChannelCallback = channelId => ({
+  public channel: InternalTypeRef.SetChannelCallback = (channelId) => ({
     ...this._logWithPath(channelId)(),
     withPath: this._logWithPath(channelId),
   });
@@ -102,7 +102,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
   };
 
   public removeListener = (id: string): void => {
-    const index = this._listeners.findIndex(listener => listener.id === id);
+    const index = this._listeners.findIndex((listener) => listener.id === id);
 
     if (index !== -1) {
       this._listeners.splice(index, 1);
@@ -181,7 +181,6 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
           label: 'INFO',
           style: {
             color: '#ffdf00',
-            'background-color': '#000',
             fontWeight: '700',
           },
         });
@@ -191,7 +190,6 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
           label: 'SUCCESS',
           style: {
             color: '#3ce200',
-            'background-color': '#000',
             fontWeight: '700',
           },
         });
