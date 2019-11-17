@@ -1,9 +1,18 @@
-const Logger = require('../dist/logger').default;
+// @ts-ignore
+import Logger from '../dist/index';
 
-const CustomLogger = new Logger();
+console.log(Logger);
 
-CustomLogger.init({
+const ChannelIds = {
+  DEFAULT: 'default',
+  auth: {
+    STATE: 'auth/state',
+  },
+};
+
+const CustomLogger = new Logger<typeof ChannelIds>({
   colorSupportType: 'terminal',
+  channelIds: ChannelIds,
   channels: {
     'auth/state': {
       options: {
@@ -14,13 +23,6 @@ CustomLogger.init({
     },
   },
 });
-
-CustomLogger.channels = {
-  DEFAULT: 'default',
-  auth: {
-    STATE: 'auth/state',
-  },
-};
 
 // export your logger to use in your application
 // export default CustomLogger
