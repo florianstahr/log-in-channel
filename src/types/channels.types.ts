@@ -1,8 +1,8 @@
 
 export interface StyleOptions {
-  color?: string
-  backgroundColor?: string | null
-  fontWeight?: string
+  color?: string;
+  backgroundColor?: string;
+  fontWeight?: string;
 }
 
 export interface DefaultOptions {
