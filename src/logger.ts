@@ -1,8 +1,3 @@
-import merge from 'lodash/merge';
-import each from 'lodash/each';
-import isPlainObject from 'lodash/isPlainObject';
-import isArray from 'lodash/isArray';
-import map from 'lodash/map';
 import { Chalk } from 'chalk';
 import InternalTypeRef from './types/index.type-ref';
 
@@ -33,13 +28,14 @@ const generatePathStyle = (style: InternalTypeRef.PathPieces.StyleCSS | null = n
     'background-color': null,
   };
 
-  if (isPlainObject(style)) {
+  if (typeof style === 'object' && style) {
     pathStyle = {
       ...pathStyle,
       ...style,
     };
   }
-  return map(pathStyle, (key, val) => `${val}: ${key}`).join('; ');
+  return (Object.keys(pathStyle) as (keyof InternalTypeRef.PathPieces.StyleCSS)[])
+    .map((key) => `${pathStyle[key]}: ${key}`).join('; ');
 };
 
 const generatePathPieceChalk = (piece: string, style: InternalTypeRef.PathPieces.Style) => {
@@ -85,7 +81,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     this._config.colorSupportType = args.colorSupportType;
   }
 
-  public channel: InternalTypeRef.SetChannelCallback = channelId => ({
+  public channel: InternalTypeRef.SetChannelCallback = (channelId) => ({
     ...this._logWithPath(channelId)(),
     withPath: this._logWithPath(channelId),
   });
@@ -102,7 +98,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
   };
 
   public removeListener = (id: string): void => {
-    const index = this._listeners.findIndex(listener => listener.id === id);
+    const index = this._listeners.findIndex((listener) => listener.id === id);
 
     if (index !== -1) {
       this._listeners.splice(index, 1);
@@ -181,7 +177,6 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
           label: 'INFO',
           style: {
             color: '#ffdf00',
-            'background-color': '#000',
             fontWeight: '700',
           },
         });
@@ -191,7 +186,6 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
           label: 'SUCCESS',
           style: {
             color: '#3ce200',
-            'background-color': '#000',
             fontWeight: '700',
           },
         });
@@ -207,21 +201,26 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     pathPieces: (InternalTypeRef.PathPieces.PathPiece | string)[] = [],
   ): InternalTypeRef.LogCallback => (...messages: any[]): void => {
     const channel = this._config.channels[channelId];
-    if (!isPlainObject(channel)) {
+    if (!channel) {
       return;
     }
 
     const opts: InternalTypeRef.Channels.DefaultOptions = {
       style: {
         color: '#7a7a7a',
-        backgroundColor: null,
+        backgroundColor: undefined,
         fontWeight: '400',
       },
     };
 
-    each([channel.options, options], (theoptions) => {
-      if (isPlainObject(theoptions)) {
-        merge(opts, theoptions);
+    [channel.options, options].forEach((theoptions) => {
+      if (typeof theoptions === 'object' && typeof theoptions.style === 'object') {
+        (Object.keys(theoptions.style) as (keyof InternalTypeRef.Channels.StyleOptions)[])
+          .forEach((key) => {
+            if (theoptions.style && theoptions.style[key]) {
+              opts.style[key] = theoptions.style[key];
+            }
+          });
       }
     });
 
@@ -236,8 +235,8 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
         'font-weight': opts.style.fontWeight,
       }));
 
-      if (isArray(pathPieces)) {
-        each(pathPieces, (piece: InternalTypeRef.PathPieces.PathPiece | string) => {
+      if (Array.isArray(pathPieces)) {
+        pathPieces.forEach((piece: InternalTypeRef.PathPieces.PathPiece | string) => {
           if (typeof piece === 'object') {
             path += `%c[${piece.label}]`;
             pathStyles.push(generatePathStyle(piece.style));
@@ -249,7 +248,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
       }
     } else if (this._config.colorSupportType === 'terminal' && this._logWithStyle) {
       path = generatePathPieceChalk(`[${channelId}]`, opts.style);
-      each(pathPieces, (piece: InternalTypeRef.PathPieces.PathPiece | string) => {
+      pathPieces.forEach((piece: InternalTypeRef.PathPieces.PathPiece | string) => {
         if (typeof piece === 'object') {
           path += generatePathPieceChalk(`[${piece.label}]`, piece.style || {});
         } else {
@@ -258,7 +257,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
       });
     } else {
       path = `[${channelId}]`;
-      each(pathPieces, (piece: InternalTypeRef.PathPieces.PathPiece | string) => {
+      pathPieces.forEach((piece: InternalTypeRef.PathPieces.PathPiece | string) => {
         if (typeof piece === 'object') {
           path += `[${piece.label}]`;
         } else {
