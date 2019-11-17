@@ -24,7 +24,14 @@ Define your own instance of `Logger` in one file and use it in all other files!
 // logger.helper.js
 import Logger from 'log-in-channel';
 
-const CustomLogger = new Logger();
+// define constants for channel ids --> easier use while developing
+
+const ChannelIds = {
+  DEFAULT: 'default',
+  auth: {
+    STATE: 'auth/state',
+  },
+};
 
 // init with channel configs
 /*
@@ -51,8 +58,10 @@ const CustomLogger = new Logger();
 
 */
 
-CustomLogger.init({
+
+const CustomLogger = new Logger<typeof ChannelIds>({
   colorSupportType: 'terminal',
+  channelIds: ChannelIds,
   channels: {
     'default': {},
     'auth/state': {
@@ -64,18 +73,8 @@ CustomLogger.init({
     },
 
     ...
-
-  },
+ },
 });
-
-// define constants for channel ids --> easier use while developing
-
-CustomLogger.channels = {
-  DEFAULT: 'default',
-  auth: {
-    STATE: 'auth/state',
-  },
-};
 
 export default CustomLogger;
 ```
@@ -90,20 +89,40 @@ CustomLogger.channel(CustomLogger.channels.auth.STATE).withPath('set').success('
 And if you don't want to have logs of one channel, you can mute it and unmute it, when you need it again.
 
 ```javascript
-CustomLogger.helper.channel.mute(CustomLogger.channels.auth.STATE); // mute single channel
+CustomLogger.muteChannel(CustomLogger.channels.auth.STATE); // mute single channel
 
-CustomLogger.helper.channel.unmute(CustomLogger.channels.auth.STATE); // unmute single channel
+CustomLogger.unmuteChannel(CustomLogger.channels.auth.STATE); // unmute single channel
 
-CustomLogger.helper.channel.muteAll(); // mute all channels
+CustomLogger.muteAllChannels(); // mute all channels
 
-CustomLogger.helper.channel.unmuteAll(); // unmute all channels
+CustomLogger.unmuteAllChannels(); // unmute all channels
+```
+
+You can also add and remove event listeners to listen for log events.
+
+```javascript
+const listenerId = CustomLogger.addListener((event) => {
+  console.log(`Logged in channel with id ${event.channelId}!`);
+});
+
+CustomLogger.removeListener(listenerId);
+```
+
+Last but not least you can remove all colors and log all messages as plain text if you want to.
+
+```javascript
+CustomLogger.logWithStyle(false);
+
+// reactivate
+
+CustomLogger.logWithStyle(true);
 ```
 
 ## Example
 
 You can find an example in the [`example`](https://github.com/florianstahr/log-in-channel/tree/master/example) directory.
 
-Run with `node example/example.js` or `yarn run:example` or `npm run run:example`!
+Run with `ts-node example/example.ts` or `yarn run:example` or `npm run run:example`!
 
 ## License
 

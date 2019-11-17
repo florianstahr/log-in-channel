@@ -1,9 +1,9 @@
 {
   "name": "log-in-channel",
   "version": "0.6.0",
-  "description": "a small utiliy for logging in js applications",
-  "main": "dist/logger.js",
-  "types": "dist/logger.d.ts",
+  "description": "a small utility for logging in js applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/florianstahr/log-in-channel.git"
@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "./node_modules/.bin/eslint src --ext ts",
-    "run:example": "node example/example.js"
+    "run:example": "ts-node example/example.ts"
   },
   "keywords": [
     "log",
@@ -34,6 +34,7 @@
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.15.0",
+    "ts-node": "^8.5.2",
     "typescript": "^3.2.4",
     "typescript-eslint-parser": "^22.0.0"
   },
