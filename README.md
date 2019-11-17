@@ -20,20 +20,24 @@ $ yarn add log-in-channel
 
 Define your own instance of `Logger` in one file and use it in all other files!
 
-```javascript
+```typescript
 // logger.helper.js
 import Logger from 'log-in-channel';
 
-// define constants for channel ids --> easier use while developing
+// an object containing the channel ids for easier use while developing
 
-const ChannelIds = {
+interface IChannelIds {
+  [key: string]: string | IChannelIds;
+}
+
+const ChannelIds: IChannelIds = {
   DEFAULT: 'default',
   auth: {
     STATE: 'auth/state',
   },
 };
 
-// init with channel configs
+// create logger
 /*
 
 {
@@ -41,7 +45,7 @@ const ChannelIds = {
   // null --> no colored logs
   // 'terminal' --> colored logs where chalk (npm package) works
   // 'chrome' --> colored logs where css styled logs work
-
+  channelIds: IChannelIds,
   channel: {
     '<id of channel>': {
       // channel config params
