@@ -16,6 +16,10 @@ const loadChalk = (): Chalk => {
   return loadedChalk;
 };
 
+const makeId = (
+  length: number,
+): string => `_${Math.random().toString(36).substr(2, length)}`;
+
 const defaultPathPieceStyle: InternalTypeRef.PathPieces.StyleChalk = {
   color: '#717171',
   fontWeight: '400',
@@ -61,12 +65,19 @@ const generatePathPieceChalk = (piece: string, style: InternalTypeRef.PathPieces
 class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.ChannelIdsObj> {
   public channels: ChannelIds;
 
+  protected _listeners: {
+    id: string;
+    callback: InternalTypeRef.LogEventListener;
+  }[] = [];
+
   protected _config: InternalTypeRef.LoggerConfig = {
     mutedChannels: [],
     everythingMuted: false,
     channels: {},
     colorSupportType: null,
   };
+
+  protected _logWithStyle: boolean = true;
 
   public constructor(args: InternalTypeRef.LoggerConstructorArgs<ChannelIds>) {
     this.channels = args.channelIds;
@@ -78,6 +89,29 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     ...this._logWithPath(channelId)(),
     withPath: this._logWithPath(channelId),
   });
+
+  public addListener = (listener: InternalTypeRef.LogEventListener): string => {
+    const id = makeId(12);
+
+    this._listeners.push({
+      id,
+      callback: listener,
+    });
+
+    return id;
+  };
+
+  public removeListener = (id: string): void => {
+    const index = this._listeners.findIndex(listener => listener.id === id);
+
+    if (index !== -1) {
+      this._listeners.splice(index, 1);
+    }
+  };
+
+  public logWithStyle = (toggle: boolean) => {
+    this._logWithStyle = toggle;
+  };
 
   public muteChannel = (channelId: string) => {
     this._config.mutedChannels.push(channelId);
@@ -170,8 +204,8 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
   protected _log = (
     channelId: string,
     options: InternalTypeRef.Channels.Options = {},
-    pathPieces: Array<InternalTypeRef.PathPieces.PathPiece | string> = [],
-  ): InternalTypeRef.LogCallback => (...messages: Array<any>): void => {
+    pathPieces: (InternalTypeRef.PathPieces.PathPiece | string)[] = [],
+  ): InternalTypeRef.LogCallback => (...messages: any[]): void => {
     const channel = this._config.channels[channelId];
     if (!isPlainObject(channel)) {
       return;
@@ -194,7 +228,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     let path: string = '';
     const pathStyles: any = [];
 
-    if (this._config.colorSupportType === 'chrome') {
+    if (this._config.colorSupportType === 'chrome' && this._logWithStyle) {
       path = `%c[${channelId}]`;
       pathStyles.push(generatePathStyle({
         color: opts.style.color,
@@ -213,7 +247,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
           }
         });
       }
-    } else if (this._config.colorSupportType === 'terminal') {
+    } else if (this._config.colorSupportType === 'terminal' && this._logWithStyle) {
       path = generatePathPieceChalk(`[${channelId}]`, opts.style);
       each(pathPieces, (piece: InternalTypeRef.PathPieces.PathPiece | string) => {
         if (typeof piece === 'object') {
@@ -234,11 +268,28 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     }
 
     if (this._config.mutedChannels.indexOf(channelId) === -1 && !this._config.everythingMuted) {
-      console.log(
-        path,
-        ...pathStyles,
-        ...messages,
-      );
+      if (this._config.colorSupportType === 'chrome') {
+        console.log(
+          path,
+          ...pathStyles,
+          ...messages,
+        );
+      } else {
+        console.log(
+          path,
+          ...messages,
+        );
+      }
+
+      const event: InternalTypeRef.LogEvent = {
+        channelId,
+        path: pathPieces,
+        messages,
+      };
+
+      this._listeners.forEach((listener): void => {
+        listener.callback(event);
+      });
     }
   };
 }

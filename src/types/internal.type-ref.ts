@@ -2,15 +2,15 @@ import * as Channels from './channels.types';
 import * as PathPieces from './path-pieces.types';
 
 export interface LoggerConfig {
-  mutedChannels: Array<string>
-  everythingMuted: Boolean
+  mutedChannels: string[];
+  everythingMuted: Boolean;
   channels: {
     [key: string]: Channels.ChannelConfig;
   };
-  colorSupportType: null | 'terminal' | 'chrome'
+  colorSupportType: null | 'terminal' | 'chrome';
 }
 
-export type LogCallback = (...messages: Array<any>) => void;
+export type LogCallback = (...messages: any[]) => void;
 
 export interface LogWithOptionsResult {
   log: LogCallback;
@@ -27,7 +27,7 @@ export interface LogWithPathResult extends LogWithOptionsResult {
 }
 
 export type LogWithPathCallback = (
-  ...path: Array<PathPieces.PathPiece | string>
+  ...path: (PathPieces.PathPiece | string)[]
 ) => LogWithPathResult;
 
 export interface SetChannelResult extends LogWithPathResult {
@@ -48,6 +48,14 @@ export interface LoggerConstructorArgs<ChannelIds extends ChannelIdsObj> {
   channelIds: ChannelIds;
   colorSupportType: null | 'terminal' | 'chrome'
 }
+
+export interface LogEvent {
+  channelId: string;
+  path: (PathPieces.PathPiece | string)[];
+  messages: string[];
+}
+
+export type LogEventListener = (event: LogEvent) => void;
 
 export {
   Channels,

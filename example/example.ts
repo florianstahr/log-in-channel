@@ -1,5 +1,5 @@
 // @ts-ignore
-import Logger from '../dist/index';
+import Logger from '../src/index';
 
 console.log(Logger);
 
@@ -22,6 +22,10 @@ const CustomLogger = new Logger<typeof ChannelIds>({
       },
     },
   },
+});
+
+CustomLogger.addListener((event) => {
+  console.log(`Logged in channel with id ${event.channelId}!`);
 });
 
 // export your logger to use in your application

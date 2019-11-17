@@ -98,6 +98,26 @@ CustomLogger.muteAllChannels(); // mute all channels
 CustomLogger.unmuteAllChannels(); // unmute all channels
 ```
 
+You can also add and remove event listeners to listen for log events.
+
+```javascript
+const listenerId = CustomLogger.addListener((event) => {
+  console.log(`Logged in channel with id ${event.channelId}!`);
+});
+
+CustomLogger.removeListener(listenerId);
+```
+
+Last but not least you can remove all colors and log all messages as plain text if you want to.
+
+```javascript
+CustomLogger.logWithStyle(false);
+
+// reactivate
+
+CustomLogger.logWithStyle(true);
+```
+
 ## Example
 
 You can find an example in the [`example`](https://github.com/florianstahr/log-in-channel/tree/master/example) directory.
