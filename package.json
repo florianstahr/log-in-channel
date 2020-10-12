@@ -2,8 +2,10 @@
   "name": "log-in-channel",
   "version": "1.1.0",
   "description": "a small utility for logging in js applications",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/florianstahr/log-in-channel.git"
@@ -17,9 +19,12 @@
     "url": "https://github.com/florianstahr/log-in-channel/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf ./dist && yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "lint": "./node_modules/.bin/eslint src --ext ts",
-    "run:example": "ts-node example/example.ts"
+    "run:example": "ts-node example/example.ts",
+    "prepublish": "yarn build"
   },
   "keywords": [
     "log",
