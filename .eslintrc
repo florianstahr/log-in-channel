@@ -1,21 +1,30 @@
 {
-  "extends": "airbnb-base",
-  "env": {
-    "node": true,
-    "mocha": true,
-    "es6": true
-  },
+  "extends": ["airbnb-typescript/base"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "project": "./tsconfig.eslint.json",
     "sourceType": "module",
     "ecmaFeatures": {
       "modules": true
     }
   },
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "settings": {
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx"]
+  },
   "rules": {
     "no-console": "off",
+    "indent": "off",
+    "@typescript-eslint/indent": ["error", 2],
+    "no-underscore-dangle": "off",
+    "import/no-cycle": "warn",
     "no-param-reassign": "off",
-    "no-new-func": "off",
-    "no-underscore-dangle": "off"
-  }
+    "arrow-parens": ["error", "as-needed"],
+    "no-multiple-empty-lines": ["error", { "max": 1 }]
+  },
+  "plugins": ["@typescript-eslint", "mocha"]
 }

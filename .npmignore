@@ -6,7 +6,7 @@
 .eslintrc*
 .gitignore
 /example
-tsconfig.json
+tsconfig.*
 /doc
 
 # misc

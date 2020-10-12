@@ -40,7 +40,6 @@ export interface ChannelIdsObj {
   [key: string]: string | ChannelIdsObj;
 }
 
-
 export interface LoggerConstructorArgs<ChannelIds extends ChannelIdsObj> {
   channels: {
     [key: string]: Channels.ChannelConfig

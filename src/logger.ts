@@ -1,13 +1,14 @@
 import { Chalk } from 'chalk';
 import InternalTypeRef from './types/index.type-ref';
 
-let loadedChalk: any;
+let loadedChalk: Chalk | undefined;
 
 const loadChalk = (): Chalk => {
   if (!loadedChalk) {
     // eslint-disable-next-line global-require
-    loadedChalk = require('chalk');
+    loadedChalk = require('chalk') as Chalk;
   }
+
   return loadedChalk;
 };
 
@@ -35,7 +36,7 @@ const generatePathStyle = (style: InternalTypeRef.PathPieces.StyleCSS | null = n
     };
   }
   return (Object.keys(pathStyle) as (keyof InternalTypeRef.PathPieces.StyleCSS)[])
-    .map((key) => `${pathStyle[key]}: ${key}`).join('; ');
+    .map(key => `${pathStyle[key]}: ${key}`).join('; ');
 };
 
 const generatePathPieceChalk = (piece: string, style: InternalTypeRef.PathPieces.Style) => {
@@ -81,7 +82,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
     this._config.colorSupportType = args.colorSupportType;
   }
 
-  public channel: InternalTypeRef.SetChannelCallback = (channelId) => ({
+  public channel: InternalTypeRef.SetChannelCallback = channelId => ({
     ...this._logWithPath(channelId)(),
     withPath: this._logWithPath(channelId),
   });
@@ -98,7 +99,7 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
   };
 
   public removeListener = (id: string): void => {
-    const index = this._listeners.findIndex((listener) => listener.id === id);
+    const index = this._listeners.findIndex(listener => listener.id === id);
 
     if (index !== -1) {
       this._listeners.splice(index, 1);
@@ -213,12 +214,12 @@ class Logger<ChannelIds extends InternalTypeRef.ChannelIdsObj = InternalTypeRef.
       },
     };
 
-    [channel.options, options].forEach((theoptions) => {
-      if (typeof theoptions === 'object' && typeof theoptions.style === 'object') {
-        (Object.keys(theoptions.style) as (keyof InternalTypeRef.Channels.StyleOptions)[])
-          .forEach((key) => {
-            if (theoptions.style && theoptions.style[key]) {
-              opts.style[key] = theoptions.style[key];
+    [channel.options, options].forEach(theOptions => {
+      if (typeof theOptions === 'object' && typeof theOptions.style === 'object') {
+        (Object.keys(theOptions.style) as (keyof InternalTypeRef.Channels.StyleOptions)[])
+          .forEach(key => {
+            if (theOptions.style && theOptions.style[key]) {
+              opts.style[key] = theOptions.style[key];
             }
           });
       }
