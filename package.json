@@ -24,7 +24,7 @@
     "build:esm": "tsc -p tsconfig.esm.json",
     "lint": "./node_modules/.bin/eslint src --ext ts",
     "run:example": "ts-node example/example.ts",
-    "prepublish": "yarn build"
+    "prepare": "yarn build"
   },
   "keywords": [
     "log",
